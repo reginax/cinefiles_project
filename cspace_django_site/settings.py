@@ -10,7 +10,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@intakes.com'),
+    # ('Your Name', 'your_email@berkeley.edu'),
 )
 
 MANAGERS = ADMINS
@@ -24,6 +24,17 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',              # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',              # Set to empty string for default.
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/image_cache',
+        'CULL_FREQUENCY': 10000,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000000
+        }
     }
 }
 
@@ -67,7 +78,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/intakes.com/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, '../static_root')
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
 # URL prefix for static files.
 # Example: "http://intakes.com/static/", "http://static.intakes.com/"
@@ -133,8 +144,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'hello',
     'service',
+    'imageserver',
+    'cinestats'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -152,7 +164,7 @@ LOGGING = {
     },
     'formatters': {
         'standard': {
-            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'format': "[%(asctime)s] %(levelname)s :: %(message)s",
             'datefmt': "%d/%b/%Y %H:%M:%S"
         },
         'verbose': {
@@ -204,8 +216,8 @@ LOGGING = {
 #
 # Log things from this file only to a separate "settings.log" file.
 #
-logging.basicConfig(filename=LOGS_DIR + os.sep + 'settings.log', level=logging.DEBUG)
-logging.debug('Settings log file started.')
+logging.basicConfig(filename=LOGS_DIR + os.sep + 'settings.log', level=logging.INFO)
+logging.info('Settings log file started.')
 
 #
 # If the application's WSGI setup script added an environment variable to tell us

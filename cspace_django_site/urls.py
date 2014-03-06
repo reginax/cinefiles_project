@@ -22,8 +22,9 @@ urlpatterns = patterns('',
                        #  url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^$', 'hello.views.home', name='home'),
                        url(r'^service/', include('service.urls')),
                        url(r'^accounts/login/$', views.login, name='login'),
                        url(r'^accounts/logout/$', views.logout_then_login, name='logout'),
+                       url(r'^stats/', include('cinestats.urls', namespace='cinestats')),
+                       url(r'^imageserver/', include('imageserver.urls', namespace='imageserver')),
                        )
