@@ -1,0 +1,142 @@
+{% extends "cspace_django_site/base_site.html" %}
+{% block title %}Statistics Report{% endblock %}
+{% load i18n admin_static %}
+{% load staticfiles %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/tablesorter.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "css/stats.css" %}"/>
+{% endblock %}
+
+
+{% block branding %}
+<div class="headerwithimage">
+   <img src="{% static "images/cine-header-logo.png" %}" />
+   <span id="site-label">Collection Statistics</span>
+</div>
+<p><img class="divider" src="{% static "images/line.png" %}" /></p>
+{% endblock %}
+
+{% block content %}
+<div id=counts-list>
+<table id="countstable">
+   <tr><th class="thlabel"></th>
+       <th class="thlabel">Total Count</th>
+       <th class="thlabel">Year to Date</th>
+   </tr>
+
+   {% if allnames_count %}
+      <tr><td class="tdlabel">All Names:</td>
+          <td class="tdnumeric">{{allnames_count}}</td>
+          <td class="tdnumeric">{{allnames_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if person_count %}
+      <tr><td class="tdlabel">Personal Names:</td>
+          <td class="tdnumeric">{{person_count}}</td>
+          <td class="tdnumeric">{{person_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if org_count %}
+      <tr><td class="tdlabel">Corporate Names:</td>
+          <td class="tdnumeric">{{org_count}}</td>
+          <td class="tdnumeric">{{org_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if committee_count %}
+      <tr><td class="tdlabel">Committee Names:</td>
+          <td class="tdnumeric">{{committee_count}}</td>
+          <td class="tdnumeric">{{committee_ytd}}</td>
+      </tr>
+   {% endif %}
+   {% if film_count %}
+      <tr><td class="tdlabel">Film Titles:</td>
+          <td class="tdnumeric">{{film_count}}</td>
+          <td class="tdnumeric">{{film_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if doc_count %}
+      <tr><td class="tdlabel">Document Titles:</td>
+          <td class="tdnumeric">{{doc_count}}</td>
+          <td class="tdnumeric">{{doc_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if page_count %}
+      <tr><td class="tdlabel">Document Pages:</td>
+          <td class="tdnumeric">{{page_count}}</td>
+          <td class="tdnumeric">{{page_ytd}}</td>
+      </tr>
+   {% endif %}
+
+   {% if subject_count %}
+      <tr><td class="tdlabel">Subject Records:</td>
+          <td class="tdnumeric">{{subject_count}}</td>
+          <td class="tdnumeric">{{subject_ytd}}</td>
+      </tr>
+   {% endif %}
+</table>
+
+<table id="accesstable">
+   {% if pub_world_count %}
+      <tr><td class="tdlabel">Publishers granting World access:</td>
+          <td class="tdnumeric1">{{pub_world_count}}</td>
+          <td class="tdnumeric"></td>
+      </tr>
+   {% endif %}
+
+   {% if doc_world_count %}
+      <tr><td class="tdlabel">Documents with World access:</td>
+          <td class="tdnumeric1">{{doc_world_count}}</td>
+          <td class="tdnumeric">{{doc_world_pages}} pages</td>
+      </tr>
+   {% endif %}
+
+   {% if pub_edu_count %}
+      <tr><td class="tdlabel">Publishers granting *.EDU access:</td>
+          <td class="tdnumeric1">{{pub_edu_count}}</td>
+          <td class="tdnumeric"></td>
+      </tr>
+   {% endif %}
+
+   {% if doc_edu_count %}
+      <tr><td class="tdlabel">Documents with *.EDU access:</td>
+          <td class="tdnumeric1">{{doc_edu_count}}</td>
+          <td class="tdnumeric">{{doc_edu_pages}} pages</td>
+      </tr>
+   {% endif %}
+
+   {% if pub_ucb_count %}
+      <tr><td class="tdlabel">Publishers granting UCB access:</td>
+          <td class="tdnumeric1">{{pub_ucb_count}}</td>
+          <td class="tdnumeric"></td>
+      </tr>
+   {% endif %}
+
+   {% if doc_ucb_count %}
+      <tr><td class="tdlabel">Documents with UCB access:</td>
+          <td class="tdnumeric1">{{doc_ucb_count}}</td>
+          <td class="tdnumeric">{{doc_ucb_pages}} pages</td>
+      </tr>
+   {% endif %}
+
+   {% if pub_pfa_count %}
+      <tr><td class="tdlabel">Publishers granting PFA access:</td>
+          <td class="tdnumeric1">{{pub_pfa_count}}</td>
+          <td class="tdnumeric"></td>
+      </tr>
+   {% endif %}
+
+   {% if doc_pfa_count %}
+      <tr><td class="tdlabel">Documents with PFA access:</td>
+          <td class="tdnumeric1">{{doc_pfa_count}}</td>
+          <td class="tdnumeric">{{doc_pfa_pages}} pages</td>
+      </tr>
+   {% endif %}
+</table>
+</div>
+{% endblock %}
