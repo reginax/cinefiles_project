@@ -1,57 +1,68 @@
-import pgdb
+#import pgdb
+import psycopg2
+from common import cspace # we use the config file reading function
+from os import path
+
 
 class RecordStats:
-   """A simple class to provide the statistical information to populate
-      a  cinefiles report. 
-   """
+    """A simple class to provide the statistical information to populate
+       a  cinefiles report.
+    """
 
-   def __init__(self, host='cinefiles.cspace.berkeley.edu'):
-      self.HOST = host
-      self.DBNAME='cinefiles_domain'
-      self.USER='reporter'
-      self.PW = 'csR2p4rt2r'
+    def __init__(self):
+        config = cspace.getConfig(path.dirname(__file__), 'cinefiles')
+        self.DBNAME = config.get('connect', 'dbname')
+        self.USER = config.get('connect', 'dbuser')
+        self.PW = config.get('connect', 'dbpassword')
+        self.HOST = config.get('connect', 'hostname')
 
-      self.connect_string = "%s:%s:%s:%s" % (
-         self.HOST,self.DBNAME, self.USER, self.PW)
+        # for psycopg2
+        self.connect_string = "host=%s dbname=%s user=%s password=%s" % (
+            self.HOST, self.DBNAME, self.USER, self.PW)
 
-   def getConn(self):
-      conn = pgdb.connect( self.connect_string )   
-      return conn
+        # for pgdb
+        #self.connect_string = "%s:%s:%s:%s" % (
+        #    self.HOST, self.DBNAME, self.USER, self.PW)
 
-   def getCount(self, query):
-      conn = self.getConn()
+    def getConn(self):
+        #conn = pgdb.connect(self.connect_string)
+        conn = psycopg2.connect(self.connect_string)
+        return conn
 
-      if not conn:
-         return None
+    def getCount(self, query):
+        conn = self.getConn()
 
-      cur = conn.cursor()
-      cur.execute( query )
-      res = cur.fetchone()[0]
-      cur.close()
-      conn.close()   
-      return res         
-      
-   def getDocCount(self):
-      query = """SELECT count(1)
+        if not conn:
+            return None
+
+        cur = conn.cursor()
+        cur.execute(query)
+        res = cur.fetchone()[0]
+        cur.close()
+        conn.close()
+        return res
+
+    def getDocCount(self):
+        query = """SELECT count(1)
                  FROM collectionobjects_common cc
                  INNER JOIN misc m 
                     ON (m.id = cc.id
                         AND m.lifecyclestate <> 'deleted'
                         AND cc.collection = 'urn:cspace:cinefiles.cspace.berkeley.edu:vocabularies:name(collection):item:name(cinefiles)''CineFiles''')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getDocYTD(self):
-      query = """SELECT count(1)
+    def getDocYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:collectionobjects:%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getNameCount(self):
-      query = """SELECT count(1)
+    def getNameCount(self):
+        query = """SELECT count(1)
                  FROM hierarchy h
                  INNER JOIN persons_common p
                     ON (h.id = p.id 
@@ -59,139 +70,175 @@ class RecordStats:
                  INNER JOIN misc m
                     ON (h.id = m.id
                         AND m.lifecyclestate <> 'deleted')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getNameYTD(self):
-      query = """SELECT count(1)
+    def getNameYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:personauthorities:name(person):item:name(%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getOrgCount(self):
-      query = """SELECT count(1)
+    def getOrgCount(self):
+        query = """SELECT count(1)
                  FROM organizations_common oc
                  INNER JOIN misc m
                     ON (oc.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND oc.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:orgauthorities:name(organization):item:name(%')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getOrgYTD(self):
-      query = """SELECT count(1)
+    def getOrgYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:orgauthorities:name(organization):item:name(%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
- 
-   def getCommitteeCount(self):
-      query = """SELECT count(1)
+        return self.getCount(query)
+
+    def getCommitteeCount(self):
+        query = """SELECT count(1)
                  FROM organizations_common o
                  INNER JOIN misc m
                     ON (o.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND o.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:orgauthorities:name(committee):item:name(%')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getCommitteeYTD(self):
-      query = """SELECT count(1)
+    def getCommitteeYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:orgauthorities:name(committee):item:name(%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getPageCount(self):
-      query = """SELECT sum(numberofobjects)
+    def getPageCount(self):
+        query = """SELECT sum(numberofobjects)
                  FROM collectionobjects_common cc
                  INNER JOIN misc m
                     ON (cc.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND cc.collection = 'urn:cspace:cinefiles.cspace.berkeley.edu:vocabularies:name(collection):item:name(cinefiles)''CineFiles''')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getPageYTD(self):
-      return 6969
+    def getPageYTD(self):
+        return 6969
 
-   def getFilmCount(self):
-      query = """SELECT count(1)
+    def getFilmCount(self):
+        query = """SELECT count(1)
                  FROM works_common w
                  INNER JOIN misc m
                     ON (w.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND w.worktype = 'urn:cspace:cinefiles.cspace.berkeley.edu:vocabularies:name(worktype):item:name(film)''Film''')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getFilmYTD(self):
-      query = """SELECT count(1)
+    def getFilmYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:workauthorities:name(work):item:name(%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getSubjectCount(self):
-      query = """SELECT count(1)
+    def getSubjectCount(self):
+        query = """SELECT count(1)
                  FROM concepts_common c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:conceptauthorities:name(concept):item:name(%')"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getSubjectYTD(self):
-      query = """SELECT count(1)
+    def getSubjectYTD(self):
+        query = """SELECT count(1)
                  FROM collectionspace_core c
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:conceptauthorities:name(concept):item:name(%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
-      return self.getCount(query)
+        return self.getCount(query)
 
-   def getPubWorldCount(self):
-      return 5001
 
-   def getDocWorldCount(self):
-      return 10000
+    def getAccessCounts(self):
+        documents = """
+            SELECT
+                 case when (cc.accesscode is null or cc.accesscode = '')
+                   then
+                        case when (ocf.accesscode is null or ocf.accesscode = '')
+                            then
+                                'Not Specified'
+                            else
+                                ocf.accesscode
+                            end
+                   else
+                     cc.accesscode
+                  end as code,
+                   sum(co.numberofobjects) pages,
+                   count(*) as total
+                FROM
+                   hierarchy h1
+                    JOIN collectionobjects_common co
+                      ON (h1.id = co.id AND h1.primarytype = 'CollectionObjectTenant50')
+                    JOIN misc m
+                      ON (co.id = m.id AND m.lifecyclestate <> 'deleted')
+                    JOIN collectionobjects_cinefiles cc
+                      ON (co.id = cc.id)
+                    JOIN organizations_common oco ON (cc.source=oco.refname)
+                    JOIN organizations_cinefiles ocf on (oco.id=ocf.id)
 
-   def getDocWorldPages(self):
-      return 20000
+                WHERE (co.objectnumber ~ '^[0-9]+$') and co.recordstatus='approved'
+                GROUP BY code"""
 
-   def getPubEduCount(self):
-      return 6002
+        publishers = """
+                SELECT
+                    case when (ocf.accesscode is null or ocf.accesscode = '')
+                        then
+                            'Not Specified'
+                        else
+                            ocf.accesscode
+                        end as code,
+                   count(*) as total
+                FROM
+                    organizations_cinefiles ocf
+                GROUP BY code
+            """
 
-   def getDocEduCount(self):
-      return 12000
+        conn = self.getConn()
 
-   def getDocEduPages(self):
-      return 24000
+        if not conn:
+            return None
 
-   def getPubUcbCount(self):
-      return 7003
+        cur = conn.cursor()
 
-   def getDocUcbCount(self):
-      return 14000
+        cur.execute(publishers)
+        publisherCounts = cur.fetchall()
+        print publisherCounts
 
-   def getDocUcbPages(self):
-      return 28000
+        cur.execute(documents)
+        documentCounts = cur.fetchall()
+        print documentCounts
 
-   def getPubPfaCount(self):
-      return 8000
-
-   def getDocPfaCount(self):
-      return 16000
-
-   def getDocPfaPages(self):
-      return  32000  
-
+        res = {}
+        for d in documentCounts:
+            res[d[0]] = [d[0], d[1], d[2], 0]
+        for d in publisherCounts:
+            if d[0] in res:
+                res[d[0]][3] = d[1]
+            else:
+                res[d[0]] = [d[0], 0, 0, d[1]]
+        result = [res[r] for r in res.keys()]
+        cur.close()
+        conn.close()
+        return result

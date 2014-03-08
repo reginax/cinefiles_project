@@ -2,39 +2,32 @@ __author__ = 'jblowe'
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
-from common import cspace
-from cspace_django_site.main import cspace_django_site
+from common import cspace # we use the config file reading function
 
 from os import path
-from ConfigParser import NoOptionError
 import urllib2
-import ConfigParser
 import time
 
+config = cspace.getConfig(path.dirname(__file__), 'cinefiles')
+username = config.get('connect', 'username')
+password = config.get('connect', 'password')
+hostname = config.get('connect', 'hostname')
+realm = config.get('connect', 'realm')
+protocol = config.get('connect', 'protocol')
+port = config.get('connect', 'port')
+
+server = protocol + "://" + hostname + ":" + port
+passman = urllib2.HTTPPasswordMgr()
+passman.add_password(realm, server, username, password)
+authhandler = urllib2.HTTPBasicAuthHandler(passman)
+opener = urllib2.build_opener(authhandler)
+urllib2.install_opener(opener)
 
 #@login_required()
 def get_image(request, image):
 
-    realm = 'org.collectionspace.services'
-    protocol = 'http'
-    port = '8180'
-
-    hostname = 'ucjeps.cspace.berkeley.edu'
-    username = 'search@ucjeps.cspace.berkeley.edu'
-    password = 'SeArChUcJePs'
-    #password = 'xxxpasswordxxx'
-
-    server = protocol + "://" + hostname + ":" + port
-    passman = urllib2.HTTPPasswordMgr()
-    passman.add_password(realm, server, username, password)
-    authhandler = urllib2.HTTPBasicAuthHandler(passman)
-    opener = urllib2.build_opener(authhandler)
-    urllib2.install_opener(opener)
-    url = "%s/cspace-services/%s" % (server, image)
-    elapsedtime = 0
-
     try:
+        url = "%s/cspace-services/%s" % (server, image)
         elapsedtime = time.time()
         f = urllib2.urlopen(url)
         data = f.read()

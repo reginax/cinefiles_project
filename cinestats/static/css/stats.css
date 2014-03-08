@@ -88,12 +88,21 @@ td.tdlabel  {
 
 #accesstable td.tdlabel {
    color: #102000;
-   width: 300px;
+   width: 175px;
 }
 
 td.tdnumeric {
    color: red;
    font-size: 1.25em;
+   text-align: right;
+}
+
+
+#accesstable td.columnheader {
+   color: black;
+   font-weight: bold;
+   font-size: large;
+   width: 175px;
    text-align: right;
 }
 

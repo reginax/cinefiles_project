@@ -19,6 +19,8 @@
 
 {% block content %}
 <div id=counts-list>
+
+<h2>Summary Statistics</h2>
 <table id="countstable">
    <tr><th class="thlabel"></th>
        <th class="thlabel">Total Count</th>
@@ -80,63 +82,24 @@
       </tr>
    {% endif %}
 </table>
-
+<p style="padding: 1em"/>
+<h2>Access Granted</h2>
 <table id="accesstable">
-   {% if pub_world_count %}
-      <tr><td class="tdlabel">Publishers granting World access:</td>
-          <td class="tdnumeric1">{{pub_world_count}}</td>
-          <td class="tdnumeric"></td>
-      </tr>
-   {% endif %}
 
-   {% if doc_world_count %}
-      <tr><td class="tdlabel">Documents with World access:</td>
-          <td class="tdnumeric1">{{doc_world_count}}</td>
-          <td class="tdnumeric">{{doc_world_pages}} pages</td>
+      <tr><td class="tdlabel"></td>
+          <td class="columnheader">Pages</td>
+          <td class="columnheader">Documents</td>
+          <td class="columnheader">Publishers</td>
       </tr>
-   {% endif %}
 
-   {% if pub_edu_count %}
-      <tr><td class="tdlabel">Publishers granting *.EDU access:</td>
-          <td class="tdnumeric1">{{pub_edu_count}}</td>
-          <td class="tdnumeric"></td>
+    {% for a in accesscounts %}
+      <tr><td class="tdlabel">{{a.0}}</td>
+          <td class="tdnumeric1">{{a.1}}</td>
+          <td class="tdnumeric1">{{a.2}}</td>
+          <td class="tdnumeric1">{{a.3}}</td>
       </tr>
-   {% endif %}
+   {% endfor %}
 
-   {% if doc_edu_count %}
-      <tr><td class="tdlabel">Documents with *.EDU access:</td>
-          <td class="tdnumeric1">{{doc_edu_count}}</td>
-          <td class="tdnumeric">{{doc_edu_pages}} pages</td>
-      </tr>
-   {% endif %}
-
-   {% if pub_ucb_count %}
-      <tr><td class="tdlabel">Publishers granting UCB access:</td>
-          <td class="tdnumeric1">{{pub_ucb_count}}</td>
-          <td class="tdnumeric"></td>
-      </tr>
-   {% endif %}
-
-   {% if doc_ucb_count %}
-      <tr><td class="tdlabel">Documents with UCB access:</td>
-          <td class="tdnumeric1">{{doc_ucb_count}}</td>
-          <td class="tdnumeric">{{doc_ucb_pages}} pages</td>
-      </tr>
-   {% endif %}
-
-   {% if pub_pfa_count %}
-      <tr><td class="tdlabel">Publishers granting PFA access:</td>
-          <td class="tdnumeric1">{{pub_pfa_count}}</td>
-          <td class="tdnumeric"></td>
-      </tr>
-   {% endif %}
-
-   {% if doc_pfa_count %}
-      <tr><td class="tdlabel">Documents with PFA access:</td>
-          <td class="tdnumeric1">{{doc_pfa_count}}</td>
-          <td class="tdnumeric">{{doc_pfa_pages}} pages</td>
-      </tr>
-   {% endif %}
 </table>
 </div>
 {% endblock %}

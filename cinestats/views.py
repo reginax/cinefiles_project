@@ -23,21 +23,7 @@ def index(request):
    subjytd = stats.getSubjectYTD()
    allnames = personcount+orgcount+committeecount
 
-   pubworldcount = stats.getPubWorldCount()
-   docworldcount = stats.getDocWorldCount()
-   docworldpages = stats.getDocWorldPages()
-
-   pubeducount = stats.getPubEduCount()
-   doceducount = stats.getDocEduCount()
-   docedupages = stats.getDocEduPages()
-
-   pubucbcount = stats.getPubUcbCount()
-   docucbcount = stats.getDocUcbCount()
-   docucbpages = stats.getDocUcbPages()
-
-   pubpfacount = stats.getPubPfaCount()
-   docpfacount = stats.getDocPfaCount()
-   docpfapages = stats.getDocPfaPages()
+   accesscounts = stats.getAccessCounts()
 
    template = loader.get_template('cinestats/stats.html')
 
@@ -58,18 +44,7 @@ def index(request):
       'page_ytd': pageytd,
       'subject_count': subjcount,
       'subject_ytd': subjytd,
-      'pub_world_count': pubworldcount,
-      'doc_world_count': docworldcount,
-      'doc_world_pages': docworldpages,
-      'pub_edu_count': pubeducount,
-      'doc_edu_count': doceducount,
-      'doc_edu_pages': docedupages,
-      'pub_ucb_count': pubucbcount,
-      'doc_ucb_count': docucbcount,
-      'doc_ucb_pages': docucbpages,
-      'pub_pfa_count': pubpfacount,
-      'doc_pfa_count': docpfacount, 
-      'doc_pfa_pages': docpfapages,
+       'accesscounts': accesscounts
    })
    return HttpResponse(template.render(context))
  
