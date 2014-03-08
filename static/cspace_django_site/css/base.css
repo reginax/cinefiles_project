@@ -118,7 +118,7 @@ li.facet {
 }
 
 #header {
-    background: #fff;
+    /* background: #fff; jblowe hacked this*/
     color: #000;
     overflow: hidden;
 }
