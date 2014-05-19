@@ -8,7 +8,7 @@ from os import path
 import urllib2
 import time
 
-config = cspace.getConfig(path.dirname(__file__), 'cinefiles')
+config = cspace.getConfig(path.dirname(__file__), 'imageserver')
 username = config.get('connect', 'username')
 password = config.get('connect', 'password')
 hostname = config.get('connect', 'hostname')
