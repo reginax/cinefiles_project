@@ -130,7 +130,17 @@ class RecordStats:
         return self.getCount(query)
 
     def getPageYTD(self):
-        return 6969
+        query = """SELECT sum(numberofobjects)
+                FROM collectionobjects_common cc
+                INNER JOIN misc m
+                   ON (cc.id = m.id
+                       AND m.lifecyclestate <> 'deleted'
+                       AND cc.collection = 'urn:cspace:cinefiles.cspace.berkeley.edu:vocabularies:name(collection):item:name(cinefiles)''CineFiles''')
+                INNER JOIN collectionspace_core c
+                   ON (c.id = m.id
+                       AND c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
+        return self.getCount(query)
+
 
     def getFilmCount(self):
         query = """SELECT count(1)
@@ -147,7 +157,7 @@ class RecordStats:
                  INNER JOIN misc m
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
-                        AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:workauthorities:name(work):item:name(%'
+                        AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:workauthorities:name(work):item:name(pfafilm%'
                         AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
         return self.getCount(query)
 
@@ -167,7 +177,8 @@ class RecordStats:
                     ON (c.id = m.id
                         AND m.lifecyclestate <> 'deleted'
                         AND c.refname like 'urn:cspace:cinefiles.cspace.berkeley.edu:conceptauthorities:name(concept):item:name(%'
-                        AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD'))"""
+                        AND  c.createdat > to_date(date_part('year', now())||'-01-01', 'YYYY-MM-DD')
+                        AND  c.createdat > '2014-04-17 11:12:00')"""
         return self.getCount(query)
 
 
@@ -241,4 +252,4 @@ class RecordStats:
         result = [res[r] for r in res.keys()]
         cur.close()
         conn.close()
-        return result
+        return result[:3]
