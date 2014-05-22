@@ -56,7 +56,7 @@ body {
 
 #accesstable {
    position: relative;
-   top: 50px;
+   top: 20px;
 }
 
 tr {
@@ -92,8 +92,8 @@ td.tdlabel  {
 }
 
 td.tdnumeric {
-   color: red;
-   font-size: 1.25em;
+   color: blue;
+   font-size: 1.35em;
    text-align: right;
 }
 
@@ -102,7 +102,7 @@ td.tdnumeric {
    color: black;
    font-weight: bold;
    font-size: large;
-   width: 175px;
+   width: 150px;
    text-align: right;
 }
 
@@ -116,7 +116,7 @@ td.tdnumeric {
 
 #accesstable td.tdnumeric1 {
    text-align: right;
-   color: red;
-   font-size: 1.25em;
+   color: blue;
+   font-size: 1.35em;
    width: 95px;
 }
