@@ -70,6 +70,8 @@ def CountMyDict(d,k,v,c):
     else:
         if c != '':
             d[k][v][c] = 1
+        elif v == 238: # allow a blank Source to be counted
+            d[k][v][c] = 1
 
 
 for lineno,ci in enumerate(FMProFile):
