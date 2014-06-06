@@ -26,6 +26,7 @@ can persist as the acquisition CSID (with new UUIDs assigned as the job is rerun
 
 """
 NB:
+    IDnumber = 115
     IDNumberPart1 = 116
     idnumberpart2 = 117
     DateAcquired = 59
@@ -35,7 +36,6 @@ NB:
     CreditLine = 48
     For = 101
     HowAcquired = 114
-    IDnumber = 115
 """
 
 counts = {}
@@ -49,7 +49,7 @@ outputFile = sys.argv[2]
 #inputFile = "/Users/jblowe/cinefilesAcq/collectionitems2.csv"
 # outputFile = "testfile.csv"
 
-FMProFile = csv.reader(open(inputFile, 'rb'), delimiter="\t")
+FMProFile = csv.reader(open(inputFile, 'rb'), delimiter="\t", quotechar="\\")
 collectionItems = {}
 counts['Collection Items'] = 0
 counts['Skeletal Acq Records output'] = 0
@@ -70,8 +70,6 @@ def CountMyDict(d,k,v,c):
     else:
         if c != '':
             d[k][v][c] = 1
-        elif v == 238: # allow a blank Source to be counted
-            d[k][v][c] = 1
 
 
 for lineno,ci in enumerate(FMProFile):
@@ -81,7 +79,7 @@ for lineno,ci in enumerate(FMProFile):
         print "problem line %s" % lineno
         print ci
         continue
-    key = ':'.join(ci[116:118])
+    key = ':'.join(ci[116:119])
     #print key + "\t",
     for var in columnsToCount:
         # print ci[var] + "\t",
