@@ -46,7 +46,7 @@ columnsToCount = [59, 238, 155, 239, 48, 101, 114]
 inputFile = sys.argv[1]
 outputFile = sys.argv[2]
 
-#inputFile = "/Users/jblowe/cinefilesAcq/collectionitems2.csv"
+# inputFile = "/Users/jblowe/cinefilesAcq/collectionitems2.csv"
 # outputFile = "testfile.csv"
 
 FMProFile = csv.reader(open(inputFile, 'rb'), delimiter="\t", quotechar="\\")
@@ -79,7 +79,9 @@ for lineno,ci in enumerate(FMProFile):
         print "problem line %s" % lineno
         print ci
         continue
-    key = ':'.join(ci[116:119])
+    key = '.'.join([ci[i] for i in [121, 116, 117]])
+    if key[0] ==  '.': key = key[1:] # remove leading '.' if we made one...
+
     #print key + "\t",
     for var in columnsToCount:
         # print ci[var] + "\t",
