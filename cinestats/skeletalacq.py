@@ -23,7 +23,6 @@ This has to be a repeatable process.
 can persist as the acquisition CSID (with new UUIDs assigned as the job is rerun).
 """
 
-
 """
 NB:
     IDnumber = 115
@@ -54,7 +53,8 @@ collectionItems = {}
 counts['Collection Items'] = 0
 counts['Skeletal Acq Records output'] = 0
 
-def CountMyDict(d,k,v,c):
+
+def CountMyDict(d, k, v, c):
     if k in d:
         pass
     else:
@@ -72,26 +72,26 @@ def CountMyDict(d,k,v,c):
             d[k][v][c] = 1
 
 
-for lineno,ci in enumerate(FMProFile):
+for lineno, ci in enumerate(FMProFile):
     counts['Collection Items'] += 1
-    ci = [ x.strip() for x in ci ]
+    ci = [x.strip() for x in ci]
     if len(ci) < 272:
         print "problem line %s" % lineno
         print ci
         continue
     key = '.'.join([ci[i] for i in [121, 116, 117]])
-    if key[0] ==  '.': key = key[1:] # remove leading '.' if we made one...
+    if key[0] == '.': key = key[1:] # remove leading '.' if we made one...
 
     #print key + "\t",
     for var in columnsToCount:
         # print ci[var] + "\t",
-        CountMyDict(collectionItems,key,var,ci[var])
-    #print
+        CountMyDict(collectionItems, key, var, ci[var])
+        #print
     # make persistent csid (i.e. MD5 hash of (unique) IDnumber)
     # https://docs.python.org/2/library/uuid.html
     if not key in keys:
         csid = uuid.uuid3(uuid.NAMESPACE_DNS, key)
-        CountMyDict(collectionItems,key,999,csid)
+        CountMyDict(collectionItems, key, 999, csid)
     keys[key] = 1
 
 outputfh = csv.writer(open(outputFile, 'wb'), delimiter="\t")
@@ -100,15 +100,15 @@ for key in collectionItems.keys():
     counts['Skeletal Acq Records output'] += 1
     vars = collectionItems[key]
     uuid = vars[999].keys()[0]
-    outputRow = [ str(uuid), key ]
+    outputRow = [str(uuid), key]
     for column in columnsToCount:
         columnValues = vars[column]
-        sorted_values = sorted(columnValues.iteritems(), key=operator.itemgetter(1),reverse=True)
-        if sorted_values == []: sorted_values = [['','']]
+        sorted_values = sorted(columnValues.iteritems(), key=operator.itemgetter(1), reverse=True)
+        if sorted_values == []: sorted_values = [['', '']]
         outputRow.append(sorted_values[0][0])
 
     outputfh.writerow(outputRow)
 
 for s in counts.keys():
-    print "%s: %s " % (s,counts[s])
+    print "%s: %s " % (s, counts[s])
 
