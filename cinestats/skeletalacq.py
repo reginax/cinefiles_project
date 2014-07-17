@@ -19,7 +19,7 @@ This has to be a repeatable process.
         get the most frequently used values in the following five fields:
         DateAcquired, Source, LegalStatus, StatusDate, CreditLine
 
-3. Generate a UUID for each unique combination of IDNumberPart1 and idnumberpart2 that
+3. Generate a UUID for each unique combination of idnumberprefix, IDNumberPart1 and idnumberpart2 that
 can persist as the acquisition CSID (with new UUIDs assigned as the job is rerun).
 """
 
@@ -28,6 +28,7 @@ NB:
     IDnumber = 115
     IDNumberPart1 = 116
     idnumberpart2 = 117
+    idnumberprefix = 121
     DateAcquired = 59
     Source = 238
     LegalStatus = 155
