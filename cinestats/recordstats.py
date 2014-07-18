@@ -246,7 +246,10 @@ class RecordStats:
             res[d[0]] = [d[0], d[1], d[2], 0]
         for d in publisherCounts:
             if d[0] in res:
-                res[d[0]][3] = d[1]
+                if d[0] == 'World':
+                   res[d[0]][3] = d[1]-2866
+                else:
+                   res[d[0]][3] = d[1]
             else:
                 res[d[0]] = [d[0], 0, 0, d[1]]
         result = [res[r] for r in res.keys()]
