@@ -15,10 +15,11 @@ class RecordStats:
         self.USER = config.get('connect', 'dbuser')
         self.PW = config.get('connect', 'dbpassword')
         self.HOST = config.get('connect', 'hostname')
+        self.MODE = config.get('connect', 'sslmode')
 
         # for psycopg2
-        self.connect_string = "host=%s dbname=%s user=%s password=%s" % (
-            self.HOST, self.DBNAME, self.USER, self.PW)
+        self.connect_string = "host=%s dbname=%s user=%s password=%s sslmode=%s" % (
+            self.HOST, self.DBNAME, self.USER, self.PW, self.MODE)
 
         # for pgdb
         #self.connect_string = "%s:%s:%s:%s" % (
