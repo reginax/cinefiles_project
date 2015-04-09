@@ -41,4 +41,4 @@ def get_image(request, image):
         print 'Reason: ', e.reason
         raise
     else:
-        return HttpResponse(data, mimetype='image/jpeg')
+        return HttpResponse(data, content_type='image/jpeg')
