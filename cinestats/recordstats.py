@@ -1,4 +1,4 @@
-#import pgdb
+#import psycopg2
 import psycopg2
 from common import cspace # we use the config file reading function
 from os import path
@@ -14,19 +14,21 @@ class RecordStats:
         self.DBNAME = config.get('connect', 'dbname')
         self.USER = config.get('connect', 'dbuser')
         self.PW = config.get('connect', 'dbpassword')
-        self.HOST = config.get('connect', 'hostname')
+        self.SERVER = config.get('connect', 'servername')
         self.MODE = config.get('connect', 'sslmode')
+        self.PORT = config.get('connect', 'port')
 
         # for psycopg2
-        self.connect_string = "host=%s dbname=%s user=%s password=%s sslmode=%s" % (
-            self.HOST, self.DBNAME, self.USER, self.PW, self.MODE)
+        self.connect_string = "host=%s port=%s dbname=%s user=%s password=%s sslmode=%s" % (
+            self.SERVER, self.PORT, self.DBNAME, self.USER, self.PW, self.MODE)
 
-        # for pgdb
+
+        # for psycopg2
         #self.connect_string = "%s:%s:%s:%s" % (
         #    self.HOST, self.DBNAME, self.USER, self.PW)
 
     def getConn(self):
-        #conn = pgdb.connect(self.connect_string)
+        #conn = psycopg2.connect(self.connect_string)
         conn = psycopg2.connect(self.connect_string)
         return conn
 
