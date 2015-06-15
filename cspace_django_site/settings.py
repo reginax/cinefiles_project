@@ -34,16 +34,17 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/tmp/image_cache',
-        'CULL_FREQUENCY': 10000,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000000
-        }
-    }
-}
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#        #'LOCATION': '/home/app_webapps/cache/' + PROJECT_NAME + '/images',
+#        'LOCATION': '/tmp/' + PROJECT_NAME + '/images',
+#        'CULL_FREQUENCY': 1000,
+#        'OPTIONS': {
+#            'MAX_ENTRIES': 1000000
+#        }
+#    }
+#}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
