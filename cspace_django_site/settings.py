@@ -5,19 +5,21 @@ import logging
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_PARENT_DIR = os.path.dirname(BASE_DIR)
 LOGS_DIR = BASE_PARENT_DIR + os.sep + 'logs'
+PROJECT_NAME = os.path.basename(BASE_PARENT_DIR)
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 import django.conf.global_settings as DEFAULT_SETTINGS  # http://stackoverflow.com/a/15446953/1763984
 GOOGLE_ANALYTICS = False
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS  + (
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
     'cspace_django_site.context_processors.settings',
 )
 
 ADMINS = (
-    # ('Your Name', 'your_email@berkeley.edu'),
+    # ('Your Name', 'your_email@intakes.com'),
 )
 
 MANAGERS = ADMINS
@@ -86,11 +88,11 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/intakes.com/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../static_root')
 
 # URL prefix for static files.
 # Example: "http://intakes.com/static/", "http://static.intakes.com/"
-STATIC_URL = '/webapps_static/'
+STATIC_URL = '/' + PROJECT_NAME + '_static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -109,7 +111,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '4vzb=dif9s33-dz9y=*0t7se44cpp6fzxu(59b2_ke^yk0ke1%'
+#SECRET_KEY = '4vzb=dif9s33-dz9y=*0t7se44cpp6fzxu(59b2_ke^yk0ke1%'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -124,6 +126,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'mobileesp.middleware.MobileDetectionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -152,9 +155,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'service',
+    'hello',
     'imageserver',
-    'cinestats'
+    'cinestats',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -172,7 +175,7 @@ LOGGING = {
     },
     'formatters': {
         'standard': {
-            'format': "[%(asctime)s] %(levelname)s :: %(message)s",
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
             'datefmt': "%d/%b/%Y %H:%M:%S"
         },
         'verbose': {
@@ -192,8 +195,8 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOGS_DIR + os.sep + 'logfile.txt',
-            'maxBytes': 50000,
-            'backupCount': 2,
+            'maxBytes': 10000000,
+            'backupCount': 5,
             'formatter': 'standard',
         },
         'console': {
@@ -224,8 +227,8 @@ LOGGING = {
 #
 # Log things from this file only to a separate "settings.log" file.
 #
-logging.basicConfig(filename=LOGS_DIR + os.sep + 'settings.log', level=logging.INFO)
-logging.info('Settings log file started.')
+logging.basicConfig(filename=LOGS_DIR + os.sep + 'settings.log', level=logging.DEBUG)
+logging.debug('Settings log file started.')
 
 #
 # If the application's WSGI setup script added an environment variable to tell us
@@ -241,6 +244,7 @@ else:
 
 logging.debug('WSGI_BASE =' + WSGI_BASE)
 LOGIN_URL = WSGI_BASE + '/accounts/login'
+LOGIN_REDIRECT_URL = WSGI_BASE + '/landing'
 
 #
 # AuthN backends
@@ -250,3 +254,11 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'authn.authn.CSpaceAuthN',
 )
+
+try:
+    from secret_key import *
+except ImportError:
+    SETTINGS_DIR=os.path.abspath(os.path.dirname(__file__))
+    from utils.secret_key_gen import *
+    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+    from secret_key import *
